@@ -1062,6 +1062,7 @@ static int spi_update_status(struct spi_device *spi)
 	struct spi_status_reg *status;
 	struct nrc *nw;
 	struct nrc_hif_device *hdev;
+	printk (KERN_ERR "WZab: spi=%p\n",spi);
 	hdev = spi_get_drvdata(spi);
 	printk (KERN_ERR "WZab: hdev=%p\n",hdev);
 	priv = hdev->priv;
@@ -1662,6 +1663,7 @@ static int c_spi_probe(struct spi_device *spi)
 	struct spi_sys_reg *sys = &priv->hw.sys;
 	int ret;
 	int i;
+	printk(KERN_ERR "WZab probe hdev=%p, priv=%p, spi=%p\n",hdev,priv,spi);
 
 	priv->spi = spi;
 	priv->loopback_prev_cnt = 0;
