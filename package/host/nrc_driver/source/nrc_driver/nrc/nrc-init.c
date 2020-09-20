@@ -30,7 +30,7 @@
 #include "nrc-recovery.h"
 
 char *fw_name;
-
+const unsigned long __stack_chk_guard = 0x000a0dff; //Added by WZab
 module_param(fw_name, charp, 0444);
 MODULE_PARM_DESC(fw_name, "Firmware file name");
 

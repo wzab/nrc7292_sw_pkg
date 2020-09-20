@@ -2164,7 +2164,7 @@ static int nrc_mac_roc(struct ieee80211_hw *hw, struct ieee80211_channel *chan,
 	return 0;
 }
 
-static int nrc_mac_cancel_roc(struct ieee80211_hw *hw)
+static int nrc_mac_cancel_roc(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 {
 	struct nrc *nw = hw->priv;
 

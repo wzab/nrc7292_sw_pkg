@@ -510,6 +510,8 @@ static int _c_spi_read_regs(struct spi_device *spi,
 	if (size == 0 || buf == NULL)
 		return -EINVAL;
 
+        printk(KERN_ERR "device: %p , buffer: %p\n",spi,buf);
+
 	cmd = C_SPI_READ | C_SPI_ADDR(addr);
 	if (size > 1)
 		cmd |= C_SPI_BURST | C_SPI_LEN(size);
@@ -1054,12 +1056,20 @@ static int spi_read_status(struct spi_device *spi)
 
 static int spi_update_status(struct spi_device *spi)
 {
-	struct nrc_hif_device *hdev = spi_get_drvdata(spi);
-	struct nrc_spi_priv *priv = hdev->priv;
-	struct spi_status_reg *status = &priv->hw.status;
-	struct nrc *nw = hdev->nw;
 	int ret, ac;
 	u32 rear;
+	struct nrc_spi_priv *priv;
+	struct spi_status_reg *status;
+	struct nrc *nw;
+	struct nrc_hif_device *hdev;
+	hdev = spi_get_drvdata(spi);
+	printk (KERN_ERR "WZab: hdev=%p\n",hdev);
+	priv = hdev->priv;
+	printk (KERN_ERR "WZab: priv=%p\n",priv);
+	status = &priv->hw.status;
+	printk (KERN_ERR "WZab: status=%p\n",status);
+	nw = hdev->nw;
+	printk (KERN_ERR "WZab: nw=%p\n",nw);
 
 #ifdef CONFIG_NRC_HIF_PRINT_FLOW_CONTROL
 	int cpuid = smp_processor_id();
@@ -1695,6 +1705,7 @@ static int c_spi_probe(struct spi_device *spi)
 		priv->credit_max[8] = CREDIT_AC2;
 		priv->credit_max[9] = CREDIT_AC3_7291;
 		priv->fastboot = false;
+		break;
 	case 0x7292:
 		priv->credit_max[0] = CREDIT_AC0;
 		priv->credit_max[1] = CREDIT_AC1;

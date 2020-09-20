@@ -23,6 +23,7 @@
 #include <linux/firmware.h>
 #include <linux/sched.h>
 #include <linux/circ_buf.h>
+//#include <linux/stackprotector.h>
 #include <linux/completion.h>
 #include <net/cfg80211.h>
 #include <net/mac80211.h>
