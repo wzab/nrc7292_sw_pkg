@@ -1663,6 +1663,7 @@ static int c_spi_probe(struct spi_device *spi)
 	struct spi_sys_reg *sys = &priv->hw.sys;
 	int ret;
 	int i;
+	printk(KERN_ERR "WZab probe hdev=%p, priv=%p, spi=%p\n",hdev,priv,spi);
 
 	priv->spi = spi;
 	priv->loopback_prev_cnt = 0;
