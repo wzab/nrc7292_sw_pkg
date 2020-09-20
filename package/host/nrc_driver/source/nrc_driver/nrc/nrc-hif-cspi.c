@@ -1015,7 +1015,7 @@ end:
 static int spi_rx_thread(void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = ((void *)(hdev) + sizeof(*hdev);
+	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
 	struct spi_device *spi = priv->spi;
 	struct sk_buff *skb;
 	struct nrc *nw = hdev->nw;
