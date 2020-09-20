@@ -1062,6 +1062,7 @@ static int spi_update_status(struct spi_device *spi)
 	struct spi_status_reg *status;
 	struct nrc *nw;
 	struct nrc_hif_device *hdev;
+	printk (KERN_ERR "WZab: spi=%p\n",spi);
 	hdev = spi_get_drvdata(spi);
 	printk (KERN_ERR "WZab: hdev=%p\n",hdev);
 	priv = hdev->priv;
@@ -1151,7 +1152,7 @@ static irqreturn_t spi_irq(int irq, void *data)
 {
 	struct nrc_hif_device *hdev = data;
 	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
-	printk(KERN_ERR "WZab spi_irq hdev=%p, priv=%p, spi=%p\n",hdev,priv);
+	printk(KERN_ERR "WZab spi_irq hdev=%p, priv=%p\n",hdev,priv);
 
 	queue_work(priv->irq_wq, &priv->irq_work);
 
@@ -1331,7 +1332,7 @@ static int spi_start(struct nrc_hif_device *dev)
 	struct spi_status_reg *status = &priv->hw.status;
 	int ret;
 
-	printk(KERN_ERR "WZab spi_irq dev=%p, priv=%p, spi=%p\n",dev,priv,spi);
+	printk(KERN_ERR "WZab spi_start dev=%p, priv=%p, spi=%p\n",dev,priv,spi);
 
 
 	/* Start rx thread */
