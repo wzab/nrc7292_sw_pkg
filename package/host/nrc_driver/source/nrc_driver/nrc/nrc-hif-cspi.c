@@ -678,7 +678,7 @@ static ssize_t c_spi_write(struct spi_device *spi, u8 *buf, ssize_t size)
 
 static inline struct spi_device *hifdev_to_spi(struct nrc_hif_device *hdev)
 {
-	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
+	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
 
 	return priv->spi;
 }
@@ -1015,7 +1015,7 @@ end:
 static int spi_rx_thread(void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
+	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
 	struct spi_device *spi = priv->spi;
 	struct sk_buff *skb;
 	struct nrc *nw = hdev->nw;
@@ -1134,7 +1134,7 @@ static int spi_update_status(struct spi_device *spi)
 static irqreturn_t spi_irq(int irq, void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
+	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
 	struct spi_device *spi = priv->spi;
 	//struct nrc *nw = hdev->nw;
 	printk(KERN_ERR "WZab spi_irq hdev=%p, priv=%p, spi=%p\n",hdev,priv,spi);
@@ -1151,7 +1151,7 @@ static irqreturn_t spi_irq(int irq, void *data)
 static irqreturn_t spi_irq(int irq, void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
+	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
 	printk(KERN_ERR "WZab spi_irq hdev=%p, priv=%p\n",hdev,priv);
 
 	queue_work(priv->irq_wq, &priv->irq_work);
@@ -1461,7 +1461,7 @@ void spi_wakeup(struct nrc_hif_device *hdev)
 static void spi_config_fw(struct nrc_hif_device *dev)
 {
 	struct nrc_hif_device *hdev = dev;
-	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
+	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
 	struct spi_device *spi = priv->spi;
 	int ac;
 
@@ -1825,7 +1825,7 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 		/*nrc_dbg(NRC_DBG_HIF, "failed to allocate nrc_hif_device");*/
 		return NULL;
 	}
-	priv = ((void *)(hdev)) + sizeof(*hdev);
+	priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
 	mutex_init(&priv->bus_lock_mutex);
 	hdev->priv = priv;
 	hdev->nw = nw;
