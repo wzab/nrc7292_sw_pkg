@@ -1136,6 +1136,7 @@ static irqreturn_t spi_irq(int irq, void *data)
 	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
 	struct spi_device *spi = priv->spi;
 	//struct nrc *nw = hdev->nw;
+	printk(KERN_ERR "WZab spi_irq hdev=%p, priv=%p, spi=%p\n",hdev,priv,spi);
 
 #ifdef CONFIG_NRC_HIF_PRINT_FLOW_CONTROL
 	nrc_dbg(NRC_DBG_HIF, "%s\n", __func__);
@@ -1150,6 +1151,7 @@ static irqreturn_t spi_irq(int irq, void *data)
 {
 	struct nrc_hif_device *hdev = data;
 	struct nrc_spi_priv *priv = ((void *)hdev) + sizeof(*hdev);
+	printk(KERN_ERR "WZab spi_irq hdev=%p, priv=%p, spi=%p\n",hdev,priv);
 
 	queue_work(priv->irq_wq, &priv->irq_work);
 
@@ -1328,6 +1330,9 @@ static int spi_start(struct nrc_hif_device *dev)
 	struct spi_device *spi = priv->spi;
 	struct spi_status_reg *status = &priv->hw.status;
 	int ret;
+
+	printk(KERN_ERR "WZab spi_irq dev=%p, priv=%p, spi=%p\n",dev,priv,spi);
+
 
 	/* Start rx thread */
 	priv->kthread = kthread_run(spi_rx_thread, dev, "spi-rx");
@@ -1825,6 +1830,8 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 	hdev->nw = nw;
 	hdev->hif_ops = &spi_ops;
 
+	printk(KERN_ERR "WZab cspi_init hdev=%p, priv=%p,\n",hdev,priv);
+
 #if !defined(CONFIG_SUPPORT_THREADED_IRQ)
 	priv->irq_wq = create_singlethread_workqueue("nrc_cspi_irq");
 	INIT_WORK(&priv->irq_work, irq_worker);
@@ -1853,6 +1860,8 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 		nrc_dbg(NRC_DBG_HIF, "failed to add spi device\n");
 		goto fail;
 	}
+
+	printk(KERN_ERR "WZab cspi_init spi=%p,\n",spi);
 
 	/* Register spi driver */
 	ret = spi_register_driver(&spi_driver);
