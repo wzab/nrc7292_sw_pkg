@@ -678,7 +678,7 @@ static ssize_t c_spi_write(struct spi_device *spi, u8 *buf, ssize_t size)
 
 static inline struct spi_device *hifdev_to_spi(struct nrc_hif_device *hdev)
 {
-	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
+	struct nrc_spi_priv *priv = (void *)(hdev + 1);
 
 	return priv->spi;
 }
@@ -702,7 +702,7 @@ static struct sk_buff *spi_rx_skb(struct spi_device *spi,
 	u32 nr_slot;
 	int ret;
 	u32 second_length = 0;
-	struct nrc_hif_device *hdev = spi->dev.platform_data; //spi_get_drvdata(spi);
+	struct nrc_hif_device *hdev = spi_get_drvdata(spi);
 	//struct nrc_spi_priv *priv = hdev->priv;
 	//struct nrc *nw = hdev->nw;
 
@@ -830,7 +830,7 @@ fail:
 
 static void spi_credit_skb(struct spi_device *spi)
 {
-	struct nrc_hif_device *hdev = spi->dev.platform_data; //spi_get_drvdata(spi);
+	struct nrc_hif_device *hdev = spi_get_drvdata(spi);
 	struct nrc_spi_priv *priv = hdev->priv;
 	struct sk_buff *skb;
 	struct hif *hif;
@@ -1015,7 +1015,7 @@ end:
 static int spi_rx_thread(void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
+	struct nrc_spi_priv *priv = (void *)(hdev + 1);
 	struct spi_device *spi = priv->spi;
 	struct sk_buff *skb;
 	struct nrc *nw = hdev->nw;
@@ -1063,8 +1063,8 @@ static int spi_update_status(struct spi_device *spi)
 	struct nrc *nw;
 	struct nrc_hif_device *hdev;
 	printk (KERN_ERR "WZab: spi=%lx\n",(long)spi);
-	//hdev = spi_get_drvdata(spi);
-	hdev = spi->dev.platform_data;
+	hdev = spi_get_drvdata(spi);
+	//hdev = spi->dev.platform_data;
 	printk (KERN_ERR "WZab: hdev=%lx\n",(long)hdev);
 	priv = hdev->priv;
 	printk (KERN_ERR "WZab: priv=%lx\n",(long)priv);
@@ -1135,7 +1135,7 @@ static int spi_update_status(struct spi_device *spi)
 static irqreturn_t spi_irq(int irq, void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
+	struct nrc_spi_priv *priv = (void *)(hdev + 1);
 	struct spi_device *spi = priv->spi;
 	//struct nrc *nw = hdev->nw;
 	printk(KERN_ERR "WZab spi_irq hdev=%lx, priv=%lx, spi=%lx\n",(long)hdev,(long)priv,(long)spi);
@@ -1152,8 +1152,7 @@ static irqreturn_t spi_irq(int irq, void *data)
 static irqreturn_t spi_irq(int irq, void *data)
 {
 	struct nrc_hif_device *hdev = data;
-	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
-	printk(KERN_ERR "WZab spi_irq hdev=%lx, priv=%lx\n",(long)hdev,(long)priv);
+	struct nrc_spi_priv *priv = (void *)(hdev + 1);
 
 	queue_work(priv->irq_wq, &priv->irq_work);
 
@@ -1462,7 +1461,7 @@ void spi_wakeup(struct nrc_hif_device *hdev)
 static void spi_config_fw(struct nrc_hif_device *dev)
 {
 	struct nrc_hif_device *hdev = dev;
-	struct nrc_spi_priv *priv = (struct nrc_spi_priv*) (((void *)hdev) + sizeof(*hdev));
+	struct nrc_spi_priv *priv = (void *)(hdev + 1);
 	struct spi_device *spi = priv->spi;
 	int ac;
 
@@ -1611,7 +1610,7 @@ static void c_spi_enable_irq(struct spi_device *spi, bool enable)
 
 static void c_spi_config(struct spi_device *spi)
 {
-	struct nrc_hif_device *hdev = spi->dev.platform_data; //spi_get_drvdata(spi);
+	struct nrc_hif_device *hdev = spi_get_drvdata(spi);
 	struct nrc_spi_priv *priv = hdev->priv;
 	struct spi_sys_reg *sys = &priv->hw.sys;
 
@@ -1827,7 +1826,7 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 		/*nrc_dbg(NRC_DBG_HIF, "failed to allocate nrc_hif_device");*/
 		return NULL;
 	}
-	priv = (struct nrc_spi_priv*)(hdev + 1);
+	priv = (void *)(hdev + 1);
 	mutex_init(&priv->bus_lock_mutex);
 	hdev->priv = priv;
 	hdev->nw = nw;
