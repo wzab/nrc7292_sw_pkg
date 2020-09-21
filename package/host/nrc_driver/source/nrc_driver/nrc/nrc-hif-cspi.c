@@ -510,7 +510,7 @@ static int _c_spi_read_regs(struct spi_device *spi,
 	if (size == 0 || buf == NULL)
 		return -EINVAL;
 
-        printk(KERN_ERR "device: %lx , buffer: %lx\n",(long)spi,(long)buf);
+        //printk(KERN_ERR "device: %lx , buffer: %lx\n",(long)spi,(long)buf);
 
 	cmd = C_SPI_READ | C_SPI_ADDR(addr);
 	if (size > 1)
@@ -1062,16 +1062,16 @@ static int spi_update_status(struct spi_device *spi)
 	struct spi_status_reg *status;
 	struct nrc *nw;
 	struct nrc_hif_device *hdev;
-	printk (KERN_ERR "WZab: spi=%lx\n",(long)spi);
+	//printk (KERN_ERR "WZab: spi=%lx\n",(long)spi);
 	hdev = spi_get_drvdata(spi);
 	//hdev = spi->dev.platform_data;
-	printk (KERN_ERR "WZab: hdev=%lx\n",(long)hdev);
+	//printk (KERN_ERR "WZab: hdev=%lx\n",(long)hdev);
 	priv = hdev->priv;
-	printk (KERN_ERR "WZab: priv=%lx\n",(long)priv);
+	//printk (KERN_ERR "WZab: priv=%lx\n",(long)priv);
 	status = &priv->hw.status;
-	printk (KERN_ERR "WZab: status=%lx\n",(long)status);
+	//printk (KERN_ERR "WZab: status=%lx\n",(long)status);
 	nw = hdev->nw;
-	printk (KERN_ERR "WZab: nw=%lx\n",(long)nw);
+	//printk (KERN_ERR "WZab: nw=%lx\n",(long)nw);
 
 #ifdef CONFIG_NRC_HIF_PRINT_FLOW_CONTROL
 	int cpuid = smp_processor_id();
@@ -1138,7 +1138,7 @@ static irqreturn_t spi_irq(int irq, void *data)
 	struct nrc_spi_priv *priv = (void *)(hdev + 1);
 	struct spi_device *spi = priv->spi;
 	//struct nrc *nw = hdev->nw;
-	printk(KERN_ERR "WZab spi_irq hdev=%lx, priv=%lx, spi=%lx\n",(long)hdev,(long)priv,(long)spi);
+	//printk(KERN_ERR "WZab spi_irq hdev=%lx, priv=%lx, spi=%lx\n",(long)hdev,(long)priv,(long)spi);
 
 #ifdef CONFIG_NRC_HIF_PRINT_FLOW_CONTROL
 	nrc_dbg(NRC_DBG_HIF, "%s\n", __func__);
