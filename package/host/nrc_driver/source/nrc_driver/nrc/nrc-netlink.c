@@ -122,6 +122,8 @@ static struct genl_family nrc_nl_fam = {
 	.mcgrps = nl_umac_mcast_grps,
 	.n_mcgrps = ARRAY_SIZE(nl_umac_mcast_grps),
 #endif
+// Below only for kernel >= 5.2.0
+	.policy  = nl_umac_policy,
 };
 
 
