@@ -1832,7 +1832,7 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 	hdev->priv = priv;
 	hdev->nw = nw;
 	hdev->hif_ops = &spi_ops;
-	printk(KERN_ERR "size*hdev: %lx , hdev: %lx, hdev+1:%lx\n",sizeof(*hdev),(long) hdev, (long) (hdev+1));
+	printk(KERN_ERR "size*hdev: %lx , hdev: %lx, hdev+1:%lx\n",(long)sizeof(*hdev),(long) hdev, (long) (hdev+1));
 	printk(KERN_ERR "WZab cspi_init hdev=%lx, priv=%lx,\n",(long)hdev,(long)priv);
 	printk(KERN_ERR "WZab cspi_init priv=%lx, hdev=%lx,\n",(long)priv,(long)hdev);
 
