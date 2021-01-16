@@ -91,7 +91,7 @@ static void * nrc_dump_load(int len)
 #if KERNEL_VERSION(4, 14, 0) <= NRC_TARGET_KERNEL_VERSION
 	ret = kernel_read(filp, g_bd_buf, length, &pos);
 #else
-	ret = kernel_read(filp, g_bd_buf, length, pos);
+	ret = kernel_read(filp, pos, g_bd_buf, length); //Corrected by WZab for 4.4.167
 #endif
 
 	filp_close(filp, NULL);
