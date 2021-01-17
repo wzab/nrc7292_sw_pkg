@@ -1661,19 +1661,24 @@ static int c_spi_probe(struct spi_device *spi)
 	priv->loopback_read_usec = 0;
 	priv->loopback_write_usec = 0;
 	priv->fastboot = false;
+	nrc_dbg(NRC_DBG_HIF,"probe 01\n");
 
 	init_waitqueue_head(&priv->wait);
 	spin_lock_init(&priv->lock);
 	spi_set_drvdata(spi, hdev);
+	nrc_dbg(NRC_DBG_HIF,"probe 02\n");
 	memcpy(&priv->spi_r, spi, sizeof(*spi));
 	priv->ops = &cspi_ops;
+	nrc_dbg(NRC_DBG_HIF,"probe 03\n");
 	if (alternate_mode) {
 		priv->spi_r.mode = SPI_MODE_1;
 		priv->ops = &cspi_ops_alt;
 	}
+	nrc_dbg(NRC_DBG_HIF,"probe 04\n");
 
 	if (fw_name && enable_hspi_init)
 		spi_reset(hdev);
+	nrc_dbg(NRC_DBG_HIF,"probe 05\n");
 
 	/* Read the register */
 	ret = c_spi_read_regs(spi, C_SPI_WAKE_UP, (void *)sys, sizeof(*sys));
@@ -1681,13 +1686,16 @@ static int c_spi_probe(struct spi_device *spi)
 		nrc_dbg(NRC_DBG_HIF, "failed to read register 0x0\n");
 		goto fail;
 	}
+	nrc_dbg(NRC_DBG_HIF,"probe 06\n");
 
 	if (fw_name)
 		spi_reset(hdev);
 	c_spi_config(spi);
+	nrc_dbg(NRC_DBG_HIF,"probe 07\n");
 
 	for (i = 0; i < CREDIT_QUEUE_MAX; i++)
 		priv->credit_max[i] = 0;
+	nrc_dbg(NRC_DBG_HIF,"probe 08\n");
 
 	switch (sys->chip_id) {
 	case 0x7291:
@@ -1745,6 +1753,7 @@ static int c_spi_probe(struct spi_device *spi)
 		priv->fastboot = false;
 		break;
 	}
+	nrc_dbg(NRC_DBG_HIF,"probe 09\n");
 
 	/* Claim gpio used for irq */
 	if (gpio_request(spi->irq, "spi-irq") < 0) {
@@ -1752,7 +1761,10 @@ static int c_spi_probe(struct spi_device *spi)
 		gpio_free(spi->irq);
 		goto fail;
 	}
+	nrc_dbg(NRC_DBG_HIF,"probe 0a\n");
+
 	gpio_direction_input(spi->irq);
+	nrc_dbg(NRC_DBG_HIF,"probe 0b\n");
 
 #if defined(SPI_DBG)
 	/* Claim gpio used for debugging */
@@ -1761,8 +1773,11 @@ static int c_spi_probe(struct spi_device *spi)
 		gpio_free(SPI_DBG);
 		goto fail;
 	}
+	nrc_dbg(NRC_DBG_HIF,"probe 0c\n");
+
 	gpio_direction_output(SPI_DBG, 1);
 #endif
+	nrc_dbg(NRC_DBG_HIF,"probe 0d\n");
 
 	return 0;
 fail:
