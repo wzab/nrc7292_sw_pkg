@@ -1642,11 +1642,17 @@ static void c_spi_config(struct spi_device *spi)
 
 static int c_spi_probe(struct spi_device *spi)
 {
-	struct nrc_hif_device *hdev = spi->dev.platform_data;
-	struct nrc_spi_priv *priv = hdev->priv;
-	struct spi_sys_reg *sys = &priv->hw.sys;
+	struct nrc_hif_device *hdev;
+	struct nrc_spi_priv *priv ;
+	struct spi_sys_reg *sys ;
 	int ret;
 	int i;
+	hdev = spi->dev.platform_data;
+	nrc_dbg(NRC_DBG_HIF,"hdev=%p\n",hdev);
+	priv = hdev->priv;
+	nrc_dbg(NRC_DBG_HIF,"priv=%p\n",priv);
+	sys = &priv->hw.sys;
+	nrc_dbg(NRC_DBG_HIF,"sys=%p\n",sys);
 
 	priv->spi = spi;
 	priv->loopback_prev_cnt = 0;
@@ -1836,6 +1842,7 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 			spi_bus_num);
 		goto fail;
 	}
+	nrc_dbg(NRC_DBG_HIF, "Found master = %x\n", master);
 
 	/* Instantiate and add a spi device */
 	spi = spi_new_device(master, &bi);
@@ -1843,14 +1850,17 @@ struct nrc_hif_device *nrc_hif_cspi_init(struct nrc *nw)
 		nrc_dbg(NRC_DBG_HIF, "failed to add spi device\n");
 		goto fail;
 	}
+	nrc_dbg(NRC_DBG_HIF, "Instantiated device = %x\n", spi);
 
 	/* Register spi driver */
 	ret = spi_register_driver(&spi_driver);
+	nrc_dbg(NRC_DBG_HIF, "Registered driver = %d\n",  ret);
 	if (ret < 0) {
 		nrc_dbg(NRC_DBG_HIF, "failed to register driver %s\n",
 			spi_driver.driver.name);
 		goto unregister_device;
 	}
+	nrc_dbg(NRC_DBG_HIF, "Successfully registered driver = %d\n",  ret);
 
 #ifdef CONFIG_TRX_BACKOFF
 	atomic_set(&priv->trx_backoff, 0);
