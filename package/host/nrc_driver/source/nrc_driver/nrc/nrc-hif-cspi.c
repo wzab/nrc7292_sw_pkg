@@ -531,7 +531,8 @@ static int _c_spi_read_regs(struct spi_device *spi,
 
 	arr_len = (size > 1) ? ARRAY_SIZE(xfer) : 2;
 	status = spi_sync_transfer(spi, xfer, arr_len);
-
+	nrc_dbg(NRC_DBG_HIF, "read_regs:%2.2x,%2.2x,%2.2x,%2.2x,%2.2x,%2.2x,%2.2x,%2.2x\n", (int) rx[0],(int) rx[1],(int) rx[2],
+		(int) rx[3],(int) rx[4],(int) rx[5],(int) rx[6],(int) rx[7]);
 	if (status < 0 || WARN_ON(rx[7] != C_SPI_ACK))
 		return -EIO;
 
